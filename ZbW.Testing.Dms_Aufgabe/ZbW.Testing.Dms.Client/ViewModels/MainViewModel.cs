@@ -18,6 +18,7 @@
             Benutzer = benutzername;
             CmdNavigateToSearch = new DelegateCommand(OnCmdNavigateToSearch);
             CmdNavigateToDocumentDetail = new DelegateCommand(OnCmdNavigateToDocumentDetail);
+            this.NavigateToSearch();
         }
 
         public string Benutzer

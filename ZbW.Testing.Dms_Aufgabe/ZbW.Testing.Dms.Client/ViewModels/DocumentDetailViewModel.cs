@@ -1,4 +1,7 @@
-﻿namespace ZbW.Testing.Dms.Client.ViewModels
+﻿using System.Windows;
+using ZbW.Testing.Dms.Client.Model;
+
+namespace ZbW.Testing.Dms.Client.ViewModels
 {
     using System;
     using System.Collections.Generic;
@@ -32,6 +35,9 @@
 
         private DateTime? _valutaDatum;
 
+        private MetadataItem _metadataitems;
+
+
         public DocumentDetailViewModel(string benutzer, Action navigateBack)
         {
             _navigateBack = navigateBack;
@@ -41,7 +47,8 @@
 
             CmdDurchsuchen = new DelegateCommand(OnCmdDurchsuchen);
             CmdSpeichern = new DelegateCommand(OnCmdSpeichern);
-        }
+            _metadataitems = new MetadataItem();
+    }
 
         public string Stichwoerter
         {
@@ -164,9 +171,50 @@
 
         private void OnCmdSpeichern()
         {
-            // TODO: Add your Code here
+            if (!this.hasAllRequiredFieldSet())
+            {
+                MessageBox.Show("Es müssen alle Pflichtfelder ausgefüllt werden!");
+                return;
+            }
+
+            if (!this.isDocumentSelected())
+            {
+                MessageBox.Show("Bitte ein Dokument auswählen.");
+                return;
+            }
+
+
+            _metadataitems.AddFile(CreateMetadataItem(), _isRemoveFileEnabled);
 
             _navigateBack();
+        }
+
+        private Boolean isDocumentSelected()
+        {
+            return !String.IsNullOrEmpty(this._filePath);
+        }
+
+
+        private Boolean hasAllRequiredFieldSet()
+        {
+            return !String.IsNullOrEmpty(this.Bezeichnung) &&
+                   this.ValutaDatum.HasValue &&
+                   !String.IsNullOrEmpty(this.SelectedTypItem);
+        }
+
+        private MetadataItem CreateMetadataItem()
+        {
+            var metadataItem = new MetadataItem();
+            metadataItem.User = Benutzer;
+            metadataItem.Description = Bezeichnung;
+            metadataItem.OriginalPath = this._filePath;
+            metadataItem.IsRemoveFileEnabled = this.IsRemoveFileEnabled;
+            metadataItem.Tag = this.Stichwoerter;
+            metadataItem.Type = this.SelectedTypItem;
+            metadataItem.ValutaDatum = (DateTime)this.ValutaDatum;
+            metadataItem.AddingDate = DateTime.Now;
+
+            return metadataItem;
         }
     }
 }

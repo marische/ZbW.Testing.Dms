@@ -69,7 +69,7 @@ namespace ZbW.Testing.Dms.Client.Services
             foreach (var xmlPath in xmlPathsFromAllFolders)
             {
 
-                metadataItemList.Add(this._fileService.DeserializeMetadataItem((String)xmlPath));
+                metadataItemList.Add(this._fileService.DeserializeMetadataItem(_fileService.serializeTestable, (String)xmlPath));
             }
 
             this.MetadataItems = metadataItemList.Cast<MetadataItem>().ToList();

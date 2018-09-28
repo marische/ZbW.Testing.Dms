@@ -13,6 +13,11 @@ namespace ZbW.Testing.Dms.Client.Services
 {
     class FileService
     {
+        internal SerializeTestable serializeTestable { get; set; }
+        public FileService()
+        {
+            serializeTestable = new SerializeTestable();
+        }
 
         public String GetContentFileName(Guid documentId, String extension)
         {
@@ -26,30 +31,16 @@ namespace ZbW.Testing.Dms.Client.Services
             return mdfilename;
         }
 
-        public String SeralizeMetadataItem(MetadataItem metadataItem)
+        public String SerializeMetadataItem(SerializeTestable serializeTestable, MetadataItem metadataItem)
         {
-            XmlSerializer xmlserializer = new XmlSerializer(typeof(MetadataItem));
-            StringWriter stringWriter = new StringWriter();
-            XmlWriter writer = XmlWriter.Create(stringWriter);
-
-            xmlserializer.Serialize(writer, metadataItem);
-
-            var serializeXml = stringWriter.ToString();
-
-            writer.Close();
-
-            return serializeXml;
+            var result = serializeTestable.SerializeMetadataItem(serializeTestable,metadataItem);
+            return result;
         }
 
-        public MetadataItem DeserializeMetadataItem(String path)
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(MetadataItem));
-
-            StreamReader reader = new StreamReader(path);
-            var metadataItem = (MetadataItem)serializer.Deserialize(reader);
-            reader.Close();
-
-            return metadataItem;
+        public MetadataItem DeserializeMetadataItem(SerializeTestable serializeTestable, String path)
+        { 
+            var result = serializeTestable.DeserializeMetadataItem(path);
+            return result;
         }
 
         public void openFile(MetadataItem metadataItem)

@@ -45,12 +45,12 @@
             return !string.IsNullOrEmpty(Benutzername);
         }
 
-        private void OnCmdAbbrechen()
+        internal virtual void OnCmdAbbrechen()
         {
             Application.Current.Shutdown();
         }
 
-        private void OnCmdLogin()
+        internal virtual void OnCmdLogin()
         {
             if (string.IsNullOrEmpty(Benutzername))
             {

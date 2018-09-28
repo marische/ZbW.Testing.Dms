@@ -9,6 +9,7 @@ using FakeItEasy;
 using NUnit.Framework;
 using Prism.Commands;
 using Prism.Mvvm;
+using ZbW.Testing.Dms.Client.Views;
 
 namespace ZbW.Testing.Dms.Client.UnitTests
 {
@@ -46,23 +47,9 @@ namespace ZbW.Testing.Dms.Client.UnitTests
             //act
             loginViewModel.Benutzername = BENUTZER;
             var result = loginViewModel.CmdLogin.CanExecute();
-
+            
             //assert
             Assert.That(result, Is.True);
         }
-
-          [Test]
-          public void login_abort_success()
-          {
-              //arrange
-              var loginViewModelMock = A.Fake<ILoginView>();
-            
-              //act
-             // loginViewModelMock.OnCmdAbbrechen.Execute();
-
-             // A.CallTo(() => loginViewModelMock.OnCmdAbbrechen()).Returns(MediaTypeNames.Application.Shutdown());
-
-
-          }
     }
 }

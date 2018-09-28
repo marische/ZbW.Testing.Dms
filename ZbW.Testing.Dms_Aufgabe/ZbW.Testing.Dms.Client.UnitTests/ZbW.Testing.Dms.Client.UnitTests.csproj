@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileServiceTest.cs" />
+    <Compile Include="SearchServiceTest.cs" />
     <Compile Include="ViewModels\LoginViewModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,27 +1,29 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Prism.Mvvm;
 using ZbW.Testing.Dms.Client.Model;
 
 namespace ZbW.Testing.Dms.Client.Services
 {
-    class SearchService
+    class SearchService : BindableBase
     {
-        private List<MetadataItem> _metadataItems;
-        private appSettingsService _appSettingsService;
+        public List<MetadataItem> _metadataItems;
+        public List<MetadataItem> _filteredItems;
         private FileService _fileService;
-
+        public DirectoryTestable _directoryTestable { get; set; }
         private String _targetPath;
 
         public SearchService()
         {
-            _appSettingsService = new appSettingsService();
-            _targetPath = _appSettingsService.GetRepositoryDir();
             _fileService = new FileService();
+            _directoryTestable = new DirectoryTestable();
+            _filteredItems = new List<MetadataItem>();
         }
 
         public List<MetadataItem> MetadataItems
@@ -42,27 +44,33 @@ namespace ZbW.Testing.Dms.Client.Services
                 searchParam = "";
             }
 
+            if (String.IsNullOrEmpty(type))
+            {
+                type = "";
+            }
+
             var filteredItems = this.MetadataItems.Where(item =>
             {
-                return (item.Description.Contains(searchParam) ||
-                        item.Tag.Contains(searchParam) ||
-                        item.AddingDate.ToString().Contains(searchParam) ||
-                        item.ValutaDatum.ToString().Contains(searchParam)) &&
+                  return (item.Description.ToLower().Contains(searchParam.ToLower()) ||
+                          item.Tag.ToLower().Contains(searchParam.ToLower()) ||
+                          item.AddingDate.ToString().Contains(searchParam) ||
+                          item.ValutaDatum.ToString().Contains(searchParam)) &&
                        (String.IsNullOrEmpty(type) || item.Type.Equals(type));
-            }).ToList();
-
+            }).Cast<MetadataItem>().ToList();
+           
             return filteredItems;
         }
 
-        public List<MetadataItem> GetAllMetadataItems()
+        public List<MetadataItem> GetAllMetadataItems(DirectoryTestable directoryTestable)
         {
-            var folderPaths = this.GetAllFolderPaths(this._targetPath);
+            _targetPath = directoryTestable.GetRepositoryDir();
+            var folderPaths = this.GetAllFolderPaths(directoryTestable, this._targetPath);
             ArrayList xmlPathsFromAllFolders = new ArrayList();
             ArrayList metadataItemList = new ArrayList();
 
             foreach (string folderPath in folderPaths)
             {
-                var xmlPathsFromOneFolder = this.GetAllXmlPaths(folderPath);
+                var xmlPathsFromOneFolder = this.GetAllXmlPaths(_directoryTestable, folderPath);
                 xmlPathsFromAllFolders.AddRange(xmlPathsFromOneFolder);
             }
 
@@ -76,20 +84,21 @@ namespace ZbW.Testing.Dms.Client.Services
             return this.MetadataItems;
         }
 
-        private String[] GetAllFolderPaths(String targetPath)
+        public String[] GetAllFolderPaths(DirectoryTestable directoryTestable, String targetPath)
         {
-            return Directory.GetDirectories(targetPath);
+            var result = directoryTestable.GetAllFolderPaths(targetPath);
+            return result;
         }
 
-        private ArrayList GetAllXmlPaths(String folderPath)
+        public ArrayList GetAllXmlPaths(DirectoryTestable directoryTestable, String folderPath)
         {
-            ArrayList xmlPaths = new ArrayList();
-            foreach (string file in Directory.EnumerateFiles(folderPath, "*.xml"))
-            {
-                xmlPaths.Add(file);
-            }
+            var result = directoryTestable.GetAllXmlPaths(folderPath);
+            return result;
+        }
 
-            return xmlPaths;
+        public String GetRepositoryDir(DirectoryTestable directoryTestable)
+        {
+            return directoryTestable.GetRepositoryDir();
         }
     }
 }

@@ -37,7 +37,7 @@ namespace ZbW.Testing.Dms.Client.ViewModels
             CmdOeffnen = new DelegateCommand(OnCmdOeffnen, OnCanCmdOeffnen);
 
             _searchService = new SearchService();
-            FilteredMetadataItems = _searchService.GetAllMetadataItems();
+            _filteredMetadataItems = _searchService.GetAllMetadataItems(_searchService._directoryTestable);
             _fileService = new FileService();
         }
 
@@ -123,12 +123,12 @@ namespace ZbW.Testing.Dms.Client.ViewModels
 
         private void OnCmdOeffnen()
         {
-            _fileService.openFile(SelectedMetadataItem);
+            _fileService.OpenFile(_fileService.serializeTestable, SelectedMetadataItem);
         }
 
         private void OnCmdSuchen()
         {
-            FilteredMetadataItems = _searchService.FilterMetadataItems(_selectedTypItem, _suchbegriff);
+            this.FilteredMetadataItems = this._searchService.FilterMetadataItems(this.SelectedTypItem, this.Suchbegriff);
         }
 
         private void OnCmdReset()

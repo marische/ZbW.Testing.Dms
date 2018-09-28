@@ -43,9 +43,9 @@ namespace ZbW.Testing.Dms.Client.Services
             return result;
         }
 
-        public void openFile(MetadataItem metadataItem)
+        public void OpenFile(SerializeTestable serializeTestable, MetadataItem metadataItem)
         {
-            Process.Start(metadataItem.FilePath);
+            serializeTestable.OpenFile(metadataItem);
         }
     }
 }

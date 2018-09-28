@@ -39,12 +39,13 @@ namespace ZbW.Testing.Dms.Client.Model
 
 
         private FileService _fileNameGenerator;
-        private appSettingsService _appSettingsService;
-
+        private SearchService _searchService;
+        
         public MetadataItem()
         {
             _fileNameGenerator = new FileService();
-            _appSettingsService = new appSettingsService();
+            _searchService = new SearchService();
+
         }
 
         private void LoadMetadata(List<KeyValuePair<string, List<MetadataItem>>> yearItems)
@@ -72,7 +73,7 @@ namespace ZbW.Testing.Dms.Client.Model
 
         public void AddFile(MetadataItem metadataItem, bool deleteFile)
         {
-            var repositoryDir = _appSettingsService.GetRepositoryDir();
+            var repositoryDir = _searchService.GetRepositoryDir(_searchService._directoryTestable);
             var year = metadataItem.ValutaDatum.Year;
             var documentId = Guid.NewGuid();
             var extension = Path.GetExtension(metadataItem.OriginalPath);

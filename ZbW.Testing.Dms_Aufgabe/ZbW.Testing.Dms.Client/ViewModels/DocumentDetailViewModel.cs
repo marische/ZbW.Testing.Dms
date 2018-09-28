@@ -210,6 +210,10 @@ namespace ZbW.Testing.Dms.Client.ViewModels
             metadataItem.OriginalPath = this._filePath;
             metadataItem.IsRemoveFileEnabled = this.IsRemoveFileEnabled;
             metadataItem.Tag = this.Stichwoerter;
+            if (metadataItem.Tag == null)
+            {
+                metadataItem.Tag = "";
+            }
             metadataItem.Type = this.SelectedTypItem;
             metadataItem.ValutaDatum = (DateTime)this.ValutaDatum;
             metadataItem.AddingDate = DateTime.Now;

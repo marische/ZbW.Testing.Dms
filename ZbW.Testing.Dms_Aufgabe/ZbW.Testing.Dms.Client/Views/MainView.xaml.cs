@@ -1,4 +1,6 @@
-﻿namespace ZbW.Testing.Dms.Client.Views
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace ZbW.Testing.Dms.Client.Views
 {
     using System.Windows;
 
@@ -7,6 +9,7 @@
     /// <summary>
     /// Interaction logic for SearchView.xaml
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public partial class MainView : Window
     {
         public MainView(string benutzername)

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace ZbW.Testing.Dms.Client.Services
 {
     [ExcludeFromCodeCoverage] // Directory muss nicht getestet werden.
-    internal class DirectoryTestable
+    public class DirectoryTestable
     {
         public virtual String[] GetAllFolderPaths(String targetPath)
         {

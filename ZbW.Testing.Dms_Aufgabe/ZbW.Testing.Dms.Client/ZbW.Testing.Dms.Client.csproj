@@ -70,9 +70,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\IMetadataItem.cs" />
     <Compile Include="Model\MetadataItem.cs" />
     <Compile Include="Repositories\ComboBoxItems.cs" />
     <Compile Include="Services\DirectoryTestable.cs" />
+    <Compile Include="Services\FileTestable.cs" />
     <Compile Include="Services\SerializeTestable.cs" />
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\SearchService.cs" />

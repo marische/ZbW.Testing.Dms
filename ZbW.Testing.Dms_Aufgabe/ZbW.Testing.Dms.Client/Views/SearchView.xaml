@@ -46,8 +46,8 @@
                 <DataGridTextColumn Header="Bezeichnung" Binding="{Binding Description}"/>
                 <DataGridTextColumn Header="Dateipfad" Binding="{Binding FilePath}"/>
                 <DataGridTextColumn Header="Tags" Binding = "{Binding Tag}"/>
-                <DataGridTextColumn Header="Rechnungsdatum" Binding = "{Binding ValutaDatum}"/>
-                <DataGridTextColumn Header="Erfassungsdatum" Binding = "{Binding AddingDate}"/>
+                <DataGridTextColumn Header="Rechnungsdatum" Binding = "{Binding ValutaDatum, StringFormat=dd.MM.yyyy}"/>
+                <DataGridTextColumn Header="Erfassungsdatum" Binding = "{Binding AddingDate, StringFormat=dd.MM.yyyy HH:mm:ss}"/>
                 <DataGridTextColumn Header="Hinzugefügt durch" Binding = "{Binding User}"/>
             </DataGrid.Columns>
         </DataGrid>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Data;
 using ZbW.Testing.Dms.Client.Services;
 
@@ -12,9 +13,11 @@ namespace ZbW.Testing.Dms.Client.ViewModels
 
     using ZbW.Testing.Dms.Client.Model;
     using ZbW.Testing.Dms.Client.Repositories;
+    [ExcludeFromCodeCoverage]
 
     internal class SearchViewModel : BindableBase
     {
+        
         private List<MetadataItem> _filteredMetadataItems;
 
         private MetadataItem _selectedMetadataItem;

@@ -1,4 +1,6 @@
-﻿namespace ZbW.Testing.Dms.Client.Views
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace ZbW.Testing.Dms.Client.Views
 {
     using System.Windows;
 
@@ -7,6 +9,7 @@
     /// <summary>
     /// Interaction logic for LoginView.xaml
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public partial class LoginView : Window
     {
         public LoginView()

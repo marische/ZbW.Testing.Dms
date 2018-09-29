@@ -11,6 +11,7 @@ namespace ZbW.Testing.Dms.Client.Model
 {
     public class MetadataItem
     {
+        public String Testergebnis { get; set; }
         public String OriginalPath { get; set; }
         public DateTime ValutaDatum { get; set; }
 
@@ -39,13 +40,41 @@ namespace ZbW.Testing.Dms.Client.Model
 
 
         private FileService _fileNameGenerator;
-        private SearchService _searchService;
+        public SearchService _searchService;
+        public SerializeTestable _serializeTestable;
         
+        public MetadataItem(SerializeTestable serializeTestable)
+        {
+            _fileNameGenerator = new FileService();
+            _searchService = new SearchService();
+            _serializeTestable = serializeTestable;
+
+        }
+
         public MetadataItem()
         {
             _fileNameGenerator = new FileService();
             _searchService = new SearchService();
+            _serializeTestable = new SerializeTestable();
+        }
 
+        public MetadataItem Create(String Benutzer, String Bezeichnung, String filePath, Boolean isRemoveFileEnabled, String stichwoerter, String selectedTypItem, DateTime valutadatum, DateTime addingdate)
+        {
+            var metadataItem = new MetadataItem(_serializeTestable);
+            metadataItem.User = Benutzer;
+            metadataItem.Description = Bezeichnung;
+            metadataItem.OriginalPath = filePath;
+            metadataItem.IsRemoveFileEnabled = isRemoveFileEnabled;
+            metadataItem.Tag = stichwoerter;
+            if (metadataItem.Tag == null)
+            {
+                metadataItem.Tag = "";
+            }
+            metadataItem.Type = selectedTypItem;
+            metadataItem.ValutaDatum = valutadatum;
+            metadataItem.AddingDate = addingdate;
+
+            return metadataItem;
         }
 
         private void LoadMetadata(List<KeyValuePair<string, List<MetadataItem>>> yearItems)
@@ -81,7 +110,7 @@ namespace ZbW.Testing.Dms.Client.Model
             var metadataFileName = _fileNameGenerator.GetMetadataFileName(documentId);
 
             var targetDir = Path.Combine(repositoryDir, year.ToString());
-
+            
 
             metadataItem.ContentFileExtension = extension;
             metadataItem.ContentFileName = contentFileName;
@@ -91,40 +120,14 @@ namespace ZbW.Testing.Dms.Client.Model
             metadataItem.FilePath = Path.Combine(targetDir, contentFileName);
 
             //write metadata
-
-            var xmlSerializer = new XmlSerializer(typeof(MetadataItem));
-
-            if (!Directory.Exists(targetDir))
-            {
-                Directory.CreateDirectory(targetDir);
-            }
-
-            var streamWriter = new StreamWriter(Path.Combine(targetDir, metadataFileName));
-            xmlSerializer.Serialize(streamWriter, metadataItem);
-            streamWriter.Flush();
-            streamWriter.Close();
+            _serializeTestable.WriteMetaData(targetDir, metadataItem, metadataFileName);
 
             //move File
 
-            File.Copy(metadataItem.OriginalPath, Path.Combine(targetDir, contentFileName));
+            _serializeTestable.MoveFile(metadataItem, targetDir, contentFileName, deleteFile);
+            Testergebnis = "Success";
 
-            if (deleteFile)
-            {
-                var task = Task.Factory.StartNew (
-                    () =>
-                    {
-                        Task.Delay(500);
-                        File.Delete(metadataItem.OriginalPath);
-                    });
-                try
-                {
-                    Task.WaitAll(task);
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.Message);
-                }
-            }
+
         }
     }
 }

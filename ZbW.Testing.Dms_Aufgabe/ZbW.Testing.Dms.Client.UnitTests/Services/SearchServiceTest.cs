@@ -67,5 +67,37 @@ namespace ZbW.Testing.Dms.Client.UnitTests
             //assert
             Assert.That(result, Is.Not.Null);
         }
+
+        [Test]
+        public void MetaDataItems_FilteredItems_validvalues()
+        {
+            //arrange
+            var sut = new SearchService();
+            var directoryTestableMock = A.Fake<DirectoryTestable>();
+            sut.GetAllMetadataItems(directoryTestableMock);
+
+            //act
+            var result = sut.FilterMetadataItems("Quittungen", "Test");
+
+            //assert
+            Assert.That(result, Is.Not.Null);
+
+        }
+
+        [Test]
+        public void MetaDataItems_FilteredItems_invalidvalues()
+        {
+            //arrange
+            var sut = new SearchService();
+            var directoryTestableMock = A.Fake<DirectoryTestable>();
+            sut.GetAllMetadataItems(directoryTestableMock);
+            
+            //act
+            var result = sut.FilterMetadataItems("", "");
+
+            //assert
+            Assert.That(result, Is.Empty);
+
+        }
     }
 }

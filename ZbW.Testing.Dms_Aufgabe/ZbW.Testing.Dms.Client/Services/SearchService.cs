@@ -11,7 +11,7 @@ using ZbW.Testing.Dms.Client.Model;
 
 namespace ZbW.Testing.Dms.Client.Services
 {
-    class SearchService : BindableBase
+    public class SearchService : BindableBase
     {
         public List<MetadataItem> _metadataItems;
         public List<MetadataItem> _filteredItems;

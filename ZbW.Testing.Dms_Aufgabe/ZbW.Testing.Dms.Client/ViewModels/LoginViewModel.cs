@@ -1,4 +1,6 @@
-﻿namespace ZbW.Testing.Dms.Client.ViewModels
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace ZbW.Testing.Dms.Client.ViewModels
 {
     using System.Windows;
 
@@ -6,7 +8,7 @@
     using Prism.Mvvm;
 
     using ZbW.Testing.Dms.Client.Views;
-
+    
     internal class LoginViewModel : BindableBase
     {
         private readonly LoginView _loginView;
@@ -45,12 +47,14 @@
             return !string.IsNullOrEmpty(Benutzername);
         }
 
-        internal virtual void OnCmdAbbrechen()
+        [ExcludeFromCodeCoverage]
+        internal void OnCmdAbbrechen()
         {
             Application.Current.Shutdown();
         }
 
-        internal virtual void OnCmdLogin()
+        [ExcludeFromCodeCoverage]
+        internal void OnCmdLogin()
         {
             if (string.IsNullOrEmpty(Benutzername))
             {

@@ -1,4 +1,6 @@
-﻿namespace ZbW.Testing.Dms.Client.Views
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace ZbW.Testing.Dms.Client.Views
 {
     using System;
     using System.Windows.Controls;
@@ -8,6 +10,7 @@
     /// <summary>
     /// Interaction logic for NewDocumentView.xaml
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public partial class DocumentDetailView : UserControl
     {
         public DocumentDetailView(string benutzer, Action navigateBack)

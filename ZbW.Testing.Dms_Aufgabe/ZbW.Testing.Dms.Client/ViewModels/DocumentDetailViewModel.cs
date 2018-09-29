@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using ZbW.Testing.Dms.Client.Model;
+using ZbW.Testing.Dms.Client.Services;
 
 namespace ZbW.Testing.Dms.Client.ViewModels
 {
@@ -15,6 +16,8 @@ namespace ZbW.Testing.Dms.Client.ViewModels
 
     internal class DocumentDetailViewModel : BindableBase
     {
+        private FileTestable _fileTestable = new FileTestable();
+
         private readonly Action _navigateBack;
 
         private string _benutzer;
@@ -23,7 +26,7 @@ namespace ZbW.Testing.Dms.Client.ViewModels
 
         private DateTime _erfassungsdatum;
 
-        private string _filePath;
+        public string _filePath { get; set; }
 
         private bool _isRemoveFileEnabled;
 
@@ -33,9 +36,11 @@ namespace ZbW.Testing.Dms.Client.ViewModels
 
         private List<string> _typItems;
 
-        private DateTime? _valutaDatum;
+        private DateTime _valutaDatum;
 
         private MetadataItem _metadataitems;
+
+        private SerializeTestable _serializeTestable;
 
 
         public DocumentDetailViewModel(string benutzer, Action navigateBack)
@@ -43,11 +48,13 @@ namespace ZbW.Testing.Dms.Client.ViewModels
             _navigateBack = navigateBack;
             Benutzer = benutzer;
             Erfassungsdatum = DateTime.Now;
+            ValutaDatum = DateTime.Today;
             TypItems = ComboBoxItems.Typ;
+            _serializeTestable = new SerializeTestable();
 
             CmdDurchsuchen = new DelegateCommand(OnCmdDurchsuchen);
             CmdSpeichern = new DelegateCommand(OnCmdSpeichern);
-            _metadataitems = new MetadataItem();
+            _metadataitems = new MetadataItem(_serializeTestable);
     }
 
         public string Stichwoerter
@@ -132,7 +139,7 @@ namespace ZbW.Testing.Dms.Client.ViewModels
 
         public DelegateCommand CmdSpeichern { get; }
 
-        public DateTime? ValutaDatum
+        public DateTime ValutaDatum
         {
             get
             {
@@ -158,18 +165,15 @@ namespace ZbW.Testing.Dms.Client.ViewModels
             }
         }
 
-        private void OnCmdDurchsuchen()
+        internal void OnCmdDurchsuchen()
         {
-            var openFileDialog = new OpenFileDialog();
-            var result = openFileDialog.ShowDialog();
-
-            if (result.GetValueOrDefault())
-            {
-                _filePath = openFileDialog.FileName;
-            }
+           
+            _fileTestable.OpenFileDialog();
+            var result = _fileTestable.ShowDialog();
+            _filePath = result;
         }
 
-        private void OnCmdSpeichern()
+        internal void OnCmdSpeichern()
         {
             if (!this.hasAllRequiredFieldSet())
             {
@@ -184,41 +188,36 @@ namespace ZbW.Testing.Dms.Client.ViewModels
             }
 
 
-            _metadataitems.AddFile(CreateMetadataItem(), _isRemoveFileEnabled);
+            _metadataitems.AddFile(CreateMetadataItem(_serializeTestable), _isRemoveFileEnabled);
 
             _navigateBack();
         }
 
-        private Boolean isDocumentSelected()
+        public Boolean isDocumentSelected()
         {
             return !String.IsNullOrEmpty(this._filePath);
         }
 
 
-        private Boolean hasAllRequiredFieldSet()
+        public Boolean hasAllRequiredFieldSet()
         {
             return !String.IsNullOrEmpty(this.Bezeichnung) &&
-                   this.ValutaDatum.HasValue &&
+                   this.ValutaDatum != null &&
                    !String.IsNullOrEmpty(this.SelectedTypItem);
         }
 
-        private MetadataItem CreateMetadataItem()
+        public MetadataItem CreateMetadataItem(SerializeTestable serializeTestable)
         {
-            var metadataItem = new MetadataItem();
-            metadataItem.User = Benutzer;
-            metadataItem.Description = Bezeichnung;
-            metadataItem.OriginalPath = this._filePath;
-            metadataItem.IsRemoveFileEnabled = this.IsRemoveFileEnabled;
-            metadataItem.Tag = this.Stichwoerter;
-            if (metadataItem.Tag == null)
+            var metadataItem = new MetadataItem(serializeTestable);
+            var valutadatum = ValutaDatum;
+            var addingdate = DateTime.Now;
+            var stichwoerter = this.Stichwoerter;
+            if (stichwoerter == null)
             {
-                metadataItem.Tag = "";
+                stichwoerter = "";
             }
-            metadataItem.Type = this.SelectedTypItem;
-            metadataItem.ValutaDatum = (DateTime)this.ValutaDatum;
-            metadataItem.AddingDate = DateTime.Now;
-
-            return metadataItem;
+            return metadataItem.Create(Benutzer, Bezeichnung, this._filePath, this.IsRemoveFileEnabled, stichwoerter, this.SelectedTypItem, valutadatum, addingdate);
+            
         }
     }
 }
